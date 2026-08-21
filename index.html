@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Afterburner Games</title>
+    <meta name="description" content="Afterburner Games — independent studio building lightweight engines and games with the design and engineering character of the late-1990s and early-2000s.">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ng-orange: #ff6600;
+            --ng-orange-hot: #ff8c1a;
+            --ng-orange-dark: #cc5200;
+            --ng-cyan: #00e5ff;
+            --ng-cyan-dim: #00b8d4;
+            --bg-black: #0a0a0a;
+            --bg-dark: #111111;
+            --bg-panel: #161616;
+            --bg-card: #1c1c1c;
+            --border-dark: #2a2a2a;
+            --text-main: #e8e8e8;
+            --text-muted: #999;
+            --text-dim: #666;
+            --radius-sm: 3px;
+            --radius-md: 6px;
+            --radius-lg: 10px;
+            --font-main: 'Arial', 'Helvetica', 'Verdana', sans-serif;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-black);
+            color: var(--text-main);
+            line-height: 1.55;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: var(--ng-orange);
+            text-decoration: none;
+            transition: color 0.15s, text-shadow 0.15s;
+        }
+        a:hover {
+            color: var(--ng-orange-hot);
+            text-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
+        }
+
+        button {
+            font-family: var(--font-main);
+            cursor: pointer;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* NAV */
+        .top-nav {
+            background: linear-gradient(180deg, #151515 0%, #0d0d0d 100%);
+            border-bottom: 3px solid var(--ng-orange);
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 102, 0, 0.08);
+            user-select: none;
+        }
+        .top-nav-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            gap: 16px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.35));
+            transition: filter 0.2s;
+        }
+        .nav-logo:hover { filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.55)); }
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+            max-width: 240px;
+            object-fit: contain;
+        }
+        .nav-logo-fallback {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            text-shadow: 0 0 12px var(--ng-cyan);
+            white-space: nowrap;
+            display: none;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            list-style: none;
+        }
+        .nav-links li a {
+            color: #aaa;
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+        .nav-links li a:hover {
+            color: #fff;
+            background: rgba(255, 102, 0, 0.12);
+            border-color: rgba(255, 102, 0, 0.3);
+        }
+        .nav-links li a.active {
+            color: var(--ng-orange);
+            background: rgba(255, 102, 0, 0.15);
+            border-color: rgba(255, 102, 0, 0.4);
+        }
+        .nav-hamburger {
+            display: none;
+            background: transparent;
+            color: #fff;
+            font-size: 1.4rem;
+            padding: 6px 10px;
+        }
+
+        /* LAYOUT */
+        .main {
+            flex: 1;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 20px 56px;
+            width: 100%;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 48px 0 40px;
+            text-align: center;
+            border-bottom: 1px solid #1a1a1a;
+            margin-bottom: 40px;
+        }
+        .hero-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--ng-cyan);
+            margin-bottom: 14px;
+        }
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .hero h1 span { color: var(--ng-orange); text-shadow: 0 0 18px rgba(255,102,0,0.4); }
+        .hero-lead {
+            font-size: 1.05rem;
+            color: #aaa;
+            max-width: 580px;
+            margin: 0 auto 28px;
+            line-height: 1.65;
+        }
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 11px 20px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            border-radius: var(--radius-md);
+            transition: all 0.15s;
+        }
+        .btn-primary {
+            background: linear-gradient(180deg, #ff8c1a 0%, var(--ng-orange) 45%, var(--ng-orange-dark) 100%);
+            color: #fff;
+            border: 2px solid #e55a00;
+            box-shadow: 0 4px 14px rgba(255,102,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,102,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        .btn-ghost {
+            background: transparent;
+            color: #bbb;
+            border: 2px solid #333;
+        }
+        .btn-ghost:hover {
+            border-color: var(--ng-cyan-dim);
+            color: var(--ng-cyan);
+            background: rgba(0,229,255,0.06);
+        }
+
+        /* SECTIONS */
+        .section { margin-bottom: 48px; }
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1e1e1e;
+        }
+        .section-head h2 {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .section-head .tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 0.9px;
+            text-transform: uppercase;
+        }
+
+        /* PANELS */
+        .panel {
+            background: linear-gradient(145deg, #181818 0%, #121212 100%);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 22px 22px;
+            margin-bottom: 14px;
+        }
+        .panel h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 10px;
+        }
+        .panel p {
+            font-size: 0.86rem;
+            color: #aaa;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .panel p:last-child { margin-bottom: 0; }
+        .panel strong { color: #ddd; }
+        .panel.accent-orange { border-left: 3px solid var(--ng-orange); }
+        .panel.accent-cyan { border-left: 3px solid var(--ng-cyan); }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ENGINE CARDS */
+        .engine-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .engine-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 22px 20px;
+            position: relative;
+        }
+        .engine-card .name {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+        .engine-card .type {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .engine-card.a25 .type { color: var(--ng-orange); }
+        .engine-card.a3d .type { color: var(--ng-cyan); }
+        .engine-card p {
+            font-size: 0.82rem;
+            color: #999;
+            line-height: 1.65;
+            margin-bottom: 14px;
+        }
+        .status {
+            display: inline-block;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 10px;
+        }
+        .a25 .status {
+            background: rgba(255,102,0,0.12);
+            color: var(--ng-orange);
+            border: 1px solid rgba(255,102,0,0.3);
+        }
+        .a3d .status {
+            background: rgba(0,229,255,0.1);
+            color: var(--ng-cyan);
+            border: 1px solid rgba(0,229,255,0.3);
+        }
+
+        /* GAME CARDS (portfolio style) */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s;
+        }
+        .game-card:hover { border-color: #444; }
+        .game-card .thumb {
+            height: 140px;
+            background: #0d0d0d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #222;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .game-card .thumb .label {
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1.2;
+            color: #666;
+        }
+        .game-card .thumb .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.58rem;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 10px;
+            z-index: 2;
+        }
+        .badge-live {
+            background: rgba(255,102,0,0.15);
+            color: var(--ng-orange);
+            border: 1px solid rgba(255,102,0,0.35);
+        }
+        .badge-dev {
+            background: rgba(0,229,255,0.1);
+            color: var(--ng-cyan);
+            border: 1px solid rgba(0,229,255,0.3);
+        }
+        .game-card .body {
+            padding: 16px 16px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card .body h3 {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .game-card .body p {
+            font-size: 0.78rem;
+            color: #888;
+            line-height: 1.55;
+            margin-bottom: 14px;
+            flex: 1;
+        }
+        .game-card .body .link {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ng-orange);
+        }
+        .game-card .body .link:hover { color: var(--ng-orange-hot); }
+
+        /* PRINCIPLES */
+        .principle-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .principle {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            text-align: center;
+        }
+        .principle h4 {
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 7px;
+        }
+        .principle p {
+            font-size: 0.74rem;
+            color: #777;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* LIST */
+        .clean-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .clean-list li {
+            font-size: 0.84rem;
+            color: #aaa;
+            padding: 9px 0 9px 20px;
+            position: relative;
+            border-bottom: 1px solid #1a1a1a;
+            line-height: 1.5;
+        }
+        .clean-list li:last-child { border-bottom: none; }
+        .clean-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 2px;
+            color: var(--ng-orange);
+            font-weight: 900;
+        }
+        .clean-list li strong { color: #ddd; }
+
+        /* FOOTER */
+        .site-footer {
+            background: linear-gradient(180deg, #0d0d0d 0%, #050505 100%);
+            border-top: 3px solid var(--ng-orange);
+            padding: 22px 16px;
+            color: #666;
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: auto;
+        }
+        .site-footer-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .footer-links a { color: #888; font-weight: 600; }
+        .footer-links a:hover { color: var(--ng-orange); }
+        .footer-copy { color: #555; font-size: 0.66rem; }
+        .footer-note {
+            color: #444;
+            font-size: 0.58rem;
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 800px) {
+            .grid-2, .engine-row, .game-grid, .principle-row {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 { font-size: 2rem; }
+            .hero { padding: 36px 0 32px; }
+            .main { padding: 0 14px 40px; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0; right: 0;
+                background: #111;
+                flex-direction: column;
+                padding: 10px 14px;
+                border-bottom: 2px solid var(--ng-orange);
+                box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+            }
+            .nav-links.open { display: flex; }
+            .nav-links li a {
+                display: block;
+                width: 100%;
+                padding: 12px 10px;
+                border-bottom: 1px solid #222;
+                font-size: 0.84rem;
+            }
+            .nav-links li:last-child a { border-bottom: none; }
+            .nav-hamburger { display: block; }
+        }
+        @media (max-width: 420px) {
+            .hero h1 { font-size: 1.65rem; }
+            .hero-lead { font-size: 0.92rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="top-nav-inner">
+        <a href="index.html" class="nav-logo" aria-label="Afterburner Games Home">
+            <img src="logo.png" alt="Afterburner Games" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span class="nav-logo-fallback">AFTERBURNER</span>
+        </a>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">☰</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#studio">Studio</a></li>
+            <li><a href="#engines">Engines</a></li>
+            <li><a href="#games">Games</a></li>
+            <li><a href="#principles">Principles</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="main">
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-label">Independent Game Development</div>
+        <h1>Afterburner <span>Games</span></h1>
+        <p class="hero-lead">
+            Lightweight engines and games built with the design sensibilities
+            and engineering discipline of the late-1990s and early-2000s.
+        </p>
+        <div class="hero-cta">
+            <a href="#engines" class="btn btn-primary">Our Engines</a>
+            <a href="#games" class="btn btn-ghost">Games</a>
+        </div>
+    </header>
+
+    <!-- STUDIO -->
+    <section class="section" id="studio">
+        <div class="section-head">
+            <h2>The Studio</h2>
+            <span class="tag">About</span>
+        </div>
+
+        <div class="panel accent-orange">
+            <h3>What we do</h3>
+            <p>
+                Afterburner Games is an independent project focused on understanding how systems work and making games that are enjoyable to spend time in.
+                The technical foundation draws from engineers who had to accomplish a lot with limited hardware — the late-1990s and early-2000s console and PC era in particular.
+            </p>
+            <p>
+                <strong>Good engineering can make surprisingly little hardware do a lot of work.</strong>
+                That idea drives the engines and tools being built here, including engines designed to run games directly in the browser.
+            </p>
+        </div>
+
+        <div class="grid-2">
+            <div class="panel">
+                <h3>The target period</h3>
+                <p>
+                    The design vocabulary comes from roughly 1998–2006: PlayStation 2, Xbox, GameCube, Dreamcast, and early programmable PC graphics.
+                    Chunky geometry, deliberate rendering choices, distinctive animation, compact game loops, and straightforward interfaces.
+                </p>
+                <p>
+                    Modern hardware and distribution are available. The design and engineering character of that period is deliberately retained.
+                </p>
+            </div>
+            <div class="panel">
+                <h3>Not nostalgia for its own sake</h3>
+                <p>
+                    This is not a museum and not an emulator.
+                    It is a modern attempt to continue the kind of game development that produced the games that still feel good to play years later —
+                    readable systems, characterful presentation, and software that respects its hardware.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ENGINES -->
+    <section class="section" id="engines">
+        <div class="section-head">
+            <h2>Engines</h2>
+            <span class="tag">Core Technology</span>
+        </div>
+
+        <p style="font-size:0.88rem;color:#999;margin-bottom:18px;line-height:1.65;max-width:720px;">
+            The primary technical goal is the expansion of two proprietary engines.
+            Both are informed by the deliberate decisions about memory, rendering, animation, visibility and simulation found in engines such as LithTech, id Tech, RenderWare and the proprietary console engines of the fifth- and sixth-generation era.
+        </p>
+
+        <div class="engine-row">
+            <div class="engine-card a25">
+                <div class="name">Axiom2.5D</div>
+                <div class="type">Isometric / 2.5D Engine</div>
+                <p>
+                    Proprietary isometric engine aimed at strategy and simulation.
+                    Prioritises clear visibility, compact asset use, and the rendering and simulation trade-offs that made early-2000s isometric games readable and performant.
+                    Currently powers "Dope Wars - King of the Street".
+                </p>
+                <span class="status">Active Development</span>
+            </div>
+            <div class="engine-card a3d">
+                <div class="name">Axiom3D</div>
+                <div class="type">Browser-Based 3D Engine</div>
+                <p>
+                    New browser-capable 3D engine whose design vocabulary draws from early-2000s engines.
+                    Built to support a larger real-time strategy game while remaining practical to ship and play without installation.
+                    Modern hardware, older design discipline.
+                </p>
+                <span class="status">In Construction</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- GAMES -->
+    <section class="section" id="games">
+        <div class="section-head">
+            <h2>Games</h2>
+            <span class="tag">Portfolio</span>
+        </div>
+
+        <div class="game-grid">
+            <!-- Dope Wars - live -->
+            <article class="game-card">
+                <div class="thumb">
+                    <span class="badge badge-live">Live</span>
+                    <img src="games/dw-rots/thumb.png" alt="Dope Wars — King of the Street">
+                </div>
+                <div class="body">
+                    <h3>Dope Wars — King of the Street</h3>
+                    <p>
+                        Browser-based street empire simulator. Buy low, sell high, manage inventory, avoid the cops.
+                        A reimagined DOS / Flash-era classic.
+                    </p>
+                    <a href="games/dw-rots/landing.html" class="link">Play →</a>
+                </div>
+            </article>
+
+            <!-- Isometric strategy - in dev -->
+            <article class="game-card">
+                <div class="thumb">
+                    <span class="badge badge-dev">In Dev</span>
+                    <div class="label" style="font-size:0.95rem;color:#666;">
+                        Isometric<br>Strategy
+                    </div>
+                </div>
+                <div class="body">
+                    <h3>Isometric Strategy</h3>
+                    <p>
+                        Age-of-Empires-inspired strategy game on Axiom2.5D.
+                        Old-school isometric presentation, readable systems, deliberate combat and management.
+                    </p>
+                    <span class="link" style="color:#555;cursor:default;">Coming later</span>
+                </div>
+            </article>
+
+            <!-- 3D RTS - in dev -->
+            <article class="game-card">
+                <div class="thumb">
+                    <span class="badge badge-dev">In Dev</span>
+                    <div class="label" style="font-size:0.95rem;color:#666;">
+                        3D RTS
+                    </div>
+                </div>
+                <div class="body">
+                    <h3>Full 3D RTS</h3>
+                    <p>
+                        Larger real-time strategy title running on Axiom3D.
+                        Same design sensibility applied to a full 3D browser-capable engine.
+                    </p>
+                    <span class="link" style="color:#555;cursor:default;">Coming later</span>
+                </div>
+            </article>
+        </div>
+
+        <div class="panel" style="margin-top:18px;">
+            <h3>Also under consideration</h3>
+            <p>
+                A shooter remains possible. The priority is expanding Axiom2.5D and Axiom3D so they can carry the strategy titles and future work without becoming general-purpose bloat.
+                Features exist to strengthen the architecture, not the other way around.
+            </p>
+        </div>
+    </section>
+
+    <!-- PRINCIPLES -->
+    <section class="section" id="principles">
+        <div class="section-head">
+            <h2>Principles</h2>
+            <span class="tag">How we work</span>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:14px;">
+            <div class="panel accent-cyan">
+                <h3>Games that leave room to breathe</h3>
+                <p>
+                    Games can be difficult and tense. They should also give the player space.
+                    Sit down, manage something, explore, or simply mess around.
+                    Tension works better when recovery exists. Not every minute needs notifications, objectives and reward loops.
+                </p>
+                <p><strong>Games should be enjoyable to spend time in.</strong></p>
+            </div>
+            <div class="panel accent-orange">
+                <h3>No microtransactions</h3>
+                <p>
+                    If you buy a game, you get the game.
+                    No virtual currencies, loot boxes, battle passes, or content deliberately withheld to be sold later.
+                    Releases are payware or donationware. That is the entire relationship.
+                </p>
+            </div>
+        </div>
+
+        <div class="principle-row">
+            <div class="principle">
+                <h4>Mechanical Sympathy</h4>
+                <p>Design around hardware. Cache, bandwidth and allocation strategy before clever algorithms.</p>
+            </div>
+            <div class="principle">
+                <h4>Browser as Platform</h4>
+                <p>Useful constraints on memory and distribution. Instant play without installers or large downloads.</p>
+            </div>
+            <div class="principle">
+                <h4>Character over Spectacle</h4>
+                <p>Chunky geometry, distinctive animation, compact loops. Technical compromises that become personality.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFLUENCES (compact) -->
+    <section class="section">
+        <div class="section-head">
+            <h2>Influences</h2>
+            <span class="tag">Reference points</span>
+        </div>
+        <div class="panel">
+            <p style="margin-bottom:0;">
+                House of the Dead 2 · Vice City Stories · San Andreas Multiplayer · Theme Hospital ·
+                Age of Empires (I–III) · Rainbow Six 3 · Crash Bandicoot · Ratchet &amp; Clank ·
+                Tomb Raider · Pandemonium! · Gex · and many others.
+                Common thread: <strong>easy to understand and enjoyable to play</strong>.
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="site-footer-inner">
+        <div class="footer-links">
+            <a href="#studio">Studio</a>
+            <a href="#engines">Engines</a>
+            <a href="#games">Games</a>
+            <a href="#principles">Principles</a>
+        </div>
+        <div class="footer-copy">&copy; 2026 Afterburner Games</div>
+        <div class="footer-note">
+            Independent development. Design sensibilities of 1998–2006, hardware of today.
+            No microtransactions. Payware or donationware.
+        </div>
+    </div>
+</footer>
+
+<script>
+(function () {
+    'use strict';
+    var ham = document.getElementById('navHamburger');
+    var links = document.getElementById('navLinks');
+    if (ham && links) {
+        ham.addEventListener('click', function (e) {
+            e.stopPropagation();
+            links.classList.toggle('open');
+        });
+        document.addEventListener('click', function (e) {
+            if (!links.contains(e.target) && !ham.contains(e.target)) {
+                links.classList.remove('open');
+            }
+        });
+        links.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () { links.classList.remove('open'); });
+        });
+    }
+})();
+</script>
+</body>
+</html>
