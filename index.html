@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Afterburner Games</title>
-    <meta name="description" content="Afterburner Games — independent studio building lightweight engines and games with the design and engineering character of the late-1990s and early-2000s.">
+    <title>Afterburner Games | Axiom3D & Redline Rally</title>
+    <meta name="description" content="Afterburner Games — independent studio building proprietary engines and games. Primary focus: Axiom3D engine and Redline Rally: Revolution, but we don't only make rally games.">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -182,7 +182,7 @@
         .hero-lead {
             font-size: 1.05rem;
             color: #aaa;
-            max-width: 580px;
+            max-width: 620px;
             margin: 0 auto 28px;
             line-height: 1.65;
         }
@@ -341,7 +341,7 @@
             border: 1px solid rgba(0,229,255,0.3);
         }
 
-        /* GAME CARDS (portfolio style) */
+        /* GAME CARDS */
         .game-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -461,30 +461,6 @@
             margin: 0;
         }
 
-        /* LIST */
-        .clean-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .clean-list li {
-            font-size: 0.84rem;
-            color: #aaa;
-            padding: 9px 0 9px 20px;
-            position: relative;
-            border-bottom: 1px solid #1a1a1a;
-            line-height: 1.5;
-        }
-        .clean-list li:last-child { border-bottom: none; }
-        .clean-list li::before {
-            content: '▸';
-            position: absolute;
-            left: 2px;
-            color: var(--ng-orange);
-            font-weight: 900;
-        }
-        .clean-list li strong { color: #ddd; }
-
         /* FOOTER */
         .site-footer {
             background: linear-gradient(180deg, #0d0d0d 0%, #050505 100%);
@@ -519,7 +495,6 @@
             line-height: 1.5;
         }
 
-        /* RESPONSIVE */
         @media (max-width: 800px) {
             .grid-2, .engine-row, .game-grid, .principle-row {
                 grid-template-columns: 1fr;
@@ -577,14 +552,14 @@
 
     <!-- HERO -->
     <header class="hero">
-        <div class="hero-label">Independent Game Development</div>
+        <div class="hero-label">Independent Game Development & Engine Engineering</div>
         <h1>Afterburner <span>Games</span></h1>
         <p class="hero-lead">
-            Lightweight engines and games built with the design sensibilities
-            and engineering discipline of the late-1990s and early-2000s.
+            Building the Axiom3D engine and the rally game it spawned — but we're not just about rally.
+            Lightweight engines and games with the design sensibilities of the late-1990s and early-2000s.
         </p>
         <div class="hero-cta">
-            <a href="#engines" class="btn btn-primary">Our Engines</a>
+            <a href="#engines" class="btn btn-primary">Axiom3D Engine</a>
             <a href="#games" class="btn btn-ghost">Games</a>
         </div>
     </header>
@@ -597,36 +572,26 @@
         </div>
 
         <div class="panel accent-orange">
-            <h3>What we do</h3>
+            <h3>What we're building now</h3>
             <p>
-                Afterburner Games is an independent project focused on understanding how systems work and making games that are enjoyable to spend time in.
-                The technical foundation draws from engineers who had to accomplish a lot with limited hardware — the late-1990s and early-2000s console and PC era in particular.
+                Afterburner Games is deep in development of the <strong>Axiom3D Game Engine</strong> — a browser-capable 3D foundation built for performance and character.
+                The engine has accidentally spawned its own flagship title: <strong>Redline Rally: Revolution</strong>, a brand-new rally game featuring military-grade vehicle physics,
+                designed to be genuinely enjoyable and inspired by PS2 classics like <strong>V-Rally</strong> and <strong>Colin McRae Rally</strong>.
             </p>
             <p>
-                <strong>Good engineering can make surprisingly little hardware do a lot of work.</strong>
-                That idea drives the engines and tools being built here, including engines designed to run games directly in the browser.
+                We prioritise solid engineering, readable systems, and games that feel as good as they look. No filler, just pure driving and technology.
             </p>
         </div>
 
-        <div class="grid-2">
-            <div class="panel">
-                <h3>The target period</h3>
-                <p>
-                    The design vocabulary comes from roughly 1998–2006: PlayStation 2, Xbox, GameCube, Dreamcast, and early programmable PC graphics.
-                    Chunky geometry, deliberate rendering choices, distinctive animation, compact game loops, and straightforward interfaces.
-                </p>
-                <p>
-                    Modern hardware and distribution are available. The design and engineering character of that period is deliberately retained.
-                </p>
-            </div>
-            <div class="panel">
-                <h3>Not nostalgia for its own sake</h3>
-                <p>
-                    This is not a museum and not an emulator.
-                    It is a modern attempt to continue the kind of game development that produced the games that still feel good to play years later —
-                    readable systems, characterful presentation, and software that respects its hardware.
-                </p>
-            </div>
+        <div class="panel">
+            <h3>Engine-first approach</h3>
+            <p>
+                Axiom3D is the core. It is built to handle simulation, rendering, and vehicle dynamics without unnecessary bloat.
+                The rally game is both a testbed and a passion project — the physics are military-grade but tuned for fun.
+            </p>
+            <p>
+                The design language remains rooted in the late 90s / early 2000s: compact game loops, deliberate memory usage, and gameplay that respects the player.
+            </p>
         </div>
     </section>
 
@@ -638,30 +603,29 @@
         </div>
 
         <p style="font-size:0.88rem;color:#999;margin-bottom:18px;line-height:1.65;max-width:720px;">
-            The primary technical goal is the expansion of two proprietary engines.
-            Both are informed by the deliberate decisions about memory, rendering, animation, visibility and simulation found in engines such as LithTech, id Tech, RenderWare and the proprietary console engines of the fifth- and sixth-generation era.
+            The main focus is <strong>Axiom3D</strong>. Axiom2.5D remains available for isometric work, but active development has shifted to the 3D engine and its racing game.
         </p>
 
         <div class="engine-row">
+            <div class="engine-card a3d" style="border-color: #2c4a4a;">
+                <div class="name">Axiom3D</div>
+                <div class="type">3D Engine & Vehicle Physics</div>
+                <p>
+                    Primary engine. Browser-capable, built for high-performance simulation and rendering.
+                    Currently powers <strong>Redline Rally: Revolution</strong> with military-grade vehicle dynamics tuned for rally gameplay.
+                    Modern hardware, classic design discipline.
+                </p>
+                <span class="status">Active Development · Primary</span>
+            </div>
             <div class="engine-card a25">
                 <div class="name">Axiom2.5D</div>
                 <div class="type">Isometric / 2.5D Engine</div>
                 <p>
-                    Proprietary isometric engine aimed at strategy and simulation.
-                    Prioritises clear visibility, compact asset use, and the rendering and simulation trade-offs that made early-2000s isometric games readable and performant.
-                    Currently powers "Dope Wars - King of the Street".
+                    Proprietary isometric engine for strategy and simulation.
+                    Still maintained for existing projects but secondary to Axiom3D.
+                    Prioritises clarity, compact assets, and classic isometric performance.
                 </p>
-                <span class="status">Active Development</span>
-            </div>
-            <div class="engine-card a3d">
-                <div class="name">Axiom3D</div>
-                <div class="type">Browser-Based 3D Engine</div>
-                <p>
-                    New browser-capable 3D engine whose design vocabulary draws from early-2000s engines.
-                    Built to support a larger real-time strategy game while remaining practical to ship and play without installation.
-                    Modern hardware, older design discipline.
-                </p>
-                <span class="status">In Construction</span>
+                <span class="status">Secondary · Maintained</span>
             </div>
         </div>
     </section>
@@ -674,7 +638,25 @@
         </div>
 
         <div class="game-grid">
-            <!-- Dope Wars - live -->
+            <!-- Redline Rally (primary) -->
+            <article class="game-card" style="border: 1px solid #3a2a1a;">
+                <div class="thumb">
+                    <span class="badge badge-dev">In Dev</span>
+                    <div class="label" style="color: #ff8c1a; text-shadow: 0 0 12px rgba(255,102,0,0.5);">
+                        REDLINE<br>RALLY
+                    </div>
+                </div>
+                <div class="body">
+                    <h3>Redline Rally: Revolution</h3>
+                    <p>
+                        A brand-new rally game driven by Axiom3D. Military-grade vehicle physics tuned for pure enjoyment.
+                        Inspired by PS2 classics like V-Rally and Colin McRae Rally. No microtransactions, just racing.
+                    </p>
+                    <span class="link" style="color:#ff8c1a;cursor:default;">Primary project</span>
+                </div>
+            </article>
+
+            <!-- Dope Wars (still live) -->
             <article class="game-card">
                 <div class="thumb">
                     <span class="badge badge-live">Live</span>
@@ -683,56 +665,12 @@
                 <div class="body">
                     <h3>Dope Wars — King of the Street</h3>
                     <p>
-                        Browser-based, mobile-friendly street empire simulator. Buy low, sell high, manage inventory, avoid the cops.
-                        A reimagined DOS / Flash-era classic.
+                        Browser-based street empire simulator. Buy low, sell high, avoid the cops.
+                        A reimagined classic, still available.
                     </p>
                     <a href="games/dw-rots/landing.html" class="link">Play →</a>
                 </div>
             </article>
-
-            <!-- Isometric strategy - in dev -->
-            <article class="game-card">
-                <div class="thumb">
-                    <span class="badge badge-dev">In Dev</span>
-                    <div class="label" style="font-size:0.95rem;color:#666;">
-                        Isometric<br>Strategy
-                    </div>
-                </div>
-                <div class="body">
-                    <h3>Isometric Strategy</h3>
-                    <p>
-                        Age-of-Empires-inspired strategy game on Axiom2.5D.
-                        Old-school isometric presentation, readable systems, deliberate combat and management.
-                    </p>
-                    <span class="link" style="color:#555;cursor:default;">Coming later</span>
-                </div>
-            </article>
-
-            <!-- 3D RTS - in dev -->
-            <article class="game-card">
-                <div class="thumb">
-                    <span class="badge badge-dev">In Dev</span>
-                    <div class="label" style="font-size:0.95rem;color:#666;">
-                        3D RTS
-                    </div>
-                </div>
-                <div class="body">
-                    <h3>Full 3D RTS</h3>
-                    <p>
-                        Larger real-time strategy title running on Axiom3D.
-                        Same design sensibility applied to a full 3D browser-capable engine.
-                    </p>
-                    <span class="link" style="color:#555;cursor:default;">Coming later</span>
-                </div>
-            </article>
-        </div>
-
-        <div class="panel" style="margin-top:18px;">
-            <h3>Also under consideration</h3>
-            <p>
-                A shooter remains possible. The priority is expanding Axiom2.5D and Axiom3D so they can carry the strategy titles and future work without becoming general-purpose bloat.
-                Features exist to strengthen the architecture, not the other way around.
-            </p>
         </div>
     </section>
 
@@ -779,7 +717,7 @@
         </div>
     </section>
 
-    <!-- INFLUENCES (compact) -->
+    <!-- INFLUENCES -->
     <section class="section">
         <div class="section-head">
             <h2>Influences</h2>
@@ -788,7 +726,7 @@
         <div class="panel">
             <p style="margin-bottom:0;">
                 House of the Dead 2 · Vice City Stories · San Andreas Multiplayer · Theme Hospital ·
-                Age of Empires (I–III) · Rainbow Six 3 · Crash Bandicoot · Ratchet &amp; Clank ·
+                Age of Empires (I–III) · Rainbow Six 3 · Crash Bandicoot · Ratchet & Clank ·
                 Tomb Raider · Pandemonium! · Gex · and many others.
                 Common thread: <strong>easy to understand and enjoyable to play</strong>.
             </p>
@@ -807,32 +745,31 @@
         </div>
         <div class="footer-copy">&copy; 2026 Afterburner Games</div>
         <div class="footer-note">
-            Independent development. Design sensibilities of 1998–2006, hardware of today.
-            No microtransactions. Payware or donationware.
+            Independent development. Axiom3D engine first, games for everyone. No microtransactions.
         </div>
     </div>
 </footer>
 
 <script>
-(function () {
-    'use strict';
-    var ham = document.getElementById('navHamburger');
-    var links = document.getElementById('navLinks');
-    if (ham && links) {
-        ham.addEventListener('click', function (e) {
-            e.stopPropagation();
-            links.classList.toggle('open');
-        });
-        document.addEventListener('click', function (e) {
-            if (!links.contains(e.target) && !ham.contains(e.target)) {
-                links.classList.remove('open');
-            }
-        });
-        links.querySelectorAll('a').forEach(function (a) {
-            a.addEventListener('click', function () { links.classList.remove('open'); });
-        });
-    }
-})();
+    (function () {
+        'use strict';
+        var ham = document.getElementById('navHamburger');
+        var links = document.getElementById('navLinks');
+        if (ham && links) {
+            ham.addEventListener('click', function (e) {
+                e.stopPropagation();
+                links.classList.toggle('open');
+            });
+            document.addEventListener('click', function (e) {
+                if (!links.contains(e.target) && !ham.contains(e.target)) {
+                    links.classList.remove('open');
+                }
+            });
+            links.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () { links.classList.remove('open'); });
+            });
+        }
+    })();
 </script>
 </body>
 </html>
