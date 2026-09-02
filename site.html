@@ -1079,19 +1079,33 @@
             margin: 0;
             box-shadow: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             width: 100vw;
-            height: var(--theatre-vh, 100dvh);
-            min-height: var(--theatre-vh, 100dvh);
+            height: 100vh;
+            height: 100dvh;
+            min-height: 100vh;
+            min-height: 100dvh;
             z-index: 9999;
+            display: block;
+            overflow: hidden;
         }
 
         body.theatre-mode .game-box {
+            position: absolute;
+            inset: 0;
+            width: 100%;
             height: 100%;
             min-height: 0;
+            max-height: none;
+        }
+
+        body.theatre-mode .game-box iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            max-height: none;
         }
 
         body.theatre-mode .game-container {
@@ -1480,83 +1494,54 @@
                 }, 100);
             }
 
-            // Mobile browsers lie about viewport height. Use the visual viewport when
-            // available and update the theatre viewport on resize/orientation changes.
-            let theatreViewportRaf = 0;
-
+            // Theatre mode: let CSS own the viewport. Do not pin the wrapper to
+            // visualViewport.height: some mobile browsers report a transient/half
+            // viewport while chrome is animating away.
             function syncTheatreViewport() {
-                if (!isTheatreMode) return;
-
-                const vv = window.visualViewport;
-                const height = vv ? vv.height : window.innerHeight;
-                const width = vv ? vv.width : window.innerWidth;
-
-                document.documentElement.style.setProperty('--theatre-vh', `${Math.round(height)}px`);
-
-                if (gameBoxWrapper) {
-                    gameBoxWrapper.style.width = `${Math.round(width)}px`;
-                    gameBoxWrapper.style.height = `${Math.round(height)}px`;
-                }
-
-                // Force layout before notifying the embedded game of the new viewport.
-                if (gameBoxWrapper) void gameBoxWrapper.offsetHeight;
-
-                if (gameIframe && gameIframe.contentWindow) {
-                    try {
-                        gameIframe.contentWindow.dispatchEvent(new Event('resize'));
-                    } catch (_) {
-                        // Cross-origin iframe: CSS resize is still enough for the browser.
-                    }
-                }
+                if (!isTheatreMode || !gameBoxWrapper) return;
+                gameBoxWrapper.style.width = '';
+                gameBoxWrapper.style.height = '';
+                gameBoxWrapper.style.removeProperty('height');
+                void gameBoxWrapper.offsetHeight;
             }
 
-            function queueTheatreViewportSync() {
-                if (!isTheatreMode) return;
-                cancelAnimationFrame(theatreViewportRaf);
-                theatreViewportRaf = requestAnimationFrame(() => {
+            function settleAndReloadTheatreGame() {
+                syncTheatreViewport();
+                requestAnimationFrame(() => {
                     syncTheatreViewport();
-                    // Mobile orientation changes often settle one frame later.
-                    requestAnimationFrame(syncTheatreViewport);
+                    requestAnimationFrame(() => reloadGameIframe());
                 });
+                setTimeout(syncTheatreViewport, 150);
+                setTimeout(syncTheatreViewport, 350);
+                setTimeout(syncTheatreViewport, 700);
             }
 
-            window.addEventListener('resize', queueTheatreViewportSync, { passive: true });
+            window.addEventListener('resize', syncTheatreViewport, { passive: true });
             window.addEventListener('orientationchange', () => {
-                queueTheatreViewportSync();
-                setTimeout(queueTheatreViewportSync, 250);
-                setTimeout(queueTheatreViewportSync, 600);
+                if (!isTheatreMode) return;
+                setTimeout(syncTheatreViewport, 100);
+                setTimeout(syncTheatreViewport, 350);
+                setTimeout(syncTheatreViewport, 700);
             }, { passive: true });
-
-            if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', queueTheatreViewportSync, { passive: true });
-                window.visualViewport.addEventListener('scroll', queueTheatreViewportSync, { passive: true });
-            }
 
             function enterTheatreMode() {
                 if (isTheatreMode) return;
 
+                // Match the old landing page behaviour: switch layout first, then
+                // restart the game only after the theatre layout has actually won.
                 isTheatreMode = true;
                 document.body.classList.add('theatre-mode');
                 window.scrollTo(0, 0);
-                syncTheatreViewport();
-
-                // Reload only after the theatre dimensions are live, otherwise the game
-                // boots against the old mobile viewport and keeps the wrong canvas size.
-                requestAnimationFrame(() => {
-                    syncTheatreViewport();
-                    reloadGameIframe();
-                });
+                settleAndReloadTheatreGame();
 
                 btnEnlarge.innerHTML = '✕ EXIT THEATRE';
-                console.log('[Technyx] Theatre mode entered (visual viewport synced).');
+                console.log('[Technyx] Theatre mode entered.');
             }
 
             function exitTheatreMode() {
                 if (!isTheatreMode) return;
                 
                 isTheatreMode = false;
-                cancelAnimationFrame(theatreViewportRaf);
-                document.documentElement.style.removeProperty('--theatre-vh');
                 if (gameBoxWrapper) {
                     gameBoxWrapper.style.width = '';
                     gameBoxWrapper.style.height = '';
