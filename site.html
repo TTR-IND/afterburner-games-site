@@ -1084,8 +1084,8 @@
             right: 0;
             bottom: 0;
             width: 100vw;
-            height: 100vh;
-            height: 100dvh;
+            height: var(--theatre-vh, 100dvh);
+            min-height: var(--theatre-vh, 100dvh);
             z-index: 9999;
         }
 
@@ -1480,29 +1480,87 @@
                 }, 100);
             }
 
+            // Mobile browsers lie about viewport height. Use the visual viewport when
+            // available and update the theatre viewport on resize/orientation changes.
+            let theatreViewportRaf = 0;
+
+            function syncTheatreViewport() {
+                if (!isTheatreMode) return;
+
+                const vv = window.visualViewport;
+                const height = vv ? vv.height : window.innerHeight;
+                const width = vv ? vv.width : window.innerWidth;
+
+                document.documentElement.style.setProperty('--theatre-vh', `${Math.round(height)}px`);
+
+                if (gameBoxWrapper) {
+                    gameBoxWrapper.style.width = `${Math.round(width)}px`;
+                    gameBoxWrapper.style.height = `${Math.round(height)}px`;
+                }
+
+                // Force layout before notifying the embedded game of the new viewport.
+                if (gameBoxWrapper) void gameBoxWrapper.offsetHeight;
+
+                if (gameIframe && gameIframe.contentWindow) {
+                    try {
+                        gameIframe.contentWindow.dispatchEvent(new Event('resize'));
+                    } catch (_) {
+                        // Cross-origin iframe: CSS resize is still enough for the browser.
+                    }
+                }
+            }
+
+            function queueTheatreViewportSync() {
+                if (!isTheatreMode) return;
+                cancelAnimationFrame(theatreViewportRaf);
+                theatreViewportRaf = requestAnimationFrame(() => {
+                    syncTheatreViewport();
+                    // Mobile orientation changes often settle one frame later.
+                    requestAnimationFrame(syncTheatreViewport);
+                });
+            }
+
+            window.addEventListener('resize', queueTheatreViewportSync, { passive: true });
+            window.addEventListener('orientationchange', () => {
+                queueTheatreViewportSync();
+                setTimeout(queueTheatreViewportSync, 250);
+                setTimeout(queueTheatreViewportSync, 600);
+            }, { passive: true });
+
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', queueTheatreViewportSync, { passive: true });
+                window.visualViewport.addEventListener('scroll', queueTheatreViewportSync, { passive: true });
+            }
+
             function enterTheatreMode() {
                 if (isTheatreMode) return;
-                
-                // Reload the iframe FIRST
-                reloadGameIframe();
-                
-                // Apply theatre mode CSS class
+
                 isTheatreMode = true;
                 document.body.classList.add('theatre-mode');
-                
-                // Update button text
-                btnEnlarge.innerHTML = '✕ EXIT THEATRE';
-                
-                // Scroll to top
                 window.scrollTo(0, 0);
-                
-                console.log('[Technyx] Theatre mode entered (CSS method).');
+                syncTheatreViewport();
+
+                // Reload only after the theatre dimensions are live, otherwise the game
+                // boots against the old mobile viewport and keeps the wrong canvas size.
+                requestAnimationFrame(() => {
+                    syncTheatreViewport();
+                    reloadGameIframe();
+                });
+
+                btnEnlarge.innerHTML = '✕ EXIT THEATRE';
+                console.log('[Technyx] Theatre mode entered (visual viewport synced).');
             }
 
             function exitTheatreMode() {
                 if (!isTheatreMode) return;
                 
                 isTheatreMode = false;
+                cancelAnimationFrame(theatreViewportRaf);
+                document.documentElement.style.removeProperty('--theatre-vh');
+                if (gameBoxWrapper) {
+                    gameBoxWrapper.style.width = '';
+                    gameBoxWrapper.style.height = '';
+                }
                 document.body.classList.remove('theatre-mode');
                 
                 // Update button text
